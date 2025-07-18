@@ -2,99 +2,75 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/nextjs";
 import { useState } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isActive = (path: string) => {
-    return pathname === path;
-  };
+  const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <nav className="backdrop-blur-md bg-white/80 border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <span className="text-2xl font-bold text-orange-500">CultNode</span>
+            <span className="text-2xl font-semibold text-gray-900 tracking-tight">🎮 CultNode 🎥</span>
           </Link>
 
-          {/* Hamburger for mobile */}
+          {/* Hamburger */}
           <button
-            className="md:hidden flex items-center text-3xl text-orange-500 focus:outline-none"
+            className="md:hidden flex items-center text-2xl text-gray-900 focus:outline-none"
             onClick={() => setMobileMenuOpen((open) => !open)}
             aria-label="Open navigation menu"
           >
-            &#9776;
+            ☰
           </button>
 
-          {/* Navigation Links (desktop) */}
+          {/* Links (Desktop) */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link 
-              href="/movies" 
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/movies') 
-                  ? 'text-orange-500 bg-orange-50' 
-                  : 'text-gray-700 hover:text-orange-500'
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Movies
-            </Link>
-            <Link 
-              href="/games" 
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/games') 
-                  ? 'text-orange-500 bg-orange-50' 
-                  : 'text-gray-700 hover:text-orange-500'
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Games
-            </Link>
-            <Link 
-              href="/anime" 
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/anime') 
-                  ? 'text-orange-500 bg-orange-50' 
-                  : 'text-gray-700 hover:text-orange-500'
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Anime
-            </Link>
-            <Link 
-              href="/channels" 
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/channels') 
-                  ? 'text-orange-500 bg-orange-50' 
-                  : 'text-gray-700 hover:text-orange-500'
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Channels
-            </Link>
+            {[
+              { name: "🎥 Movies", href: "/movies" },
+              { name: "🎮 Games", href: "/games" },
+              { name: "🌀 Anime", href: "/anime" },
+              { name: "🎤 Channels", href: "/channels" },
+            ].map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`text-sm font-medium transition-all px-2 py-1 rounded-md ${
+                  isActive(item.href)
+                    ? "text-black border-b-2 border-gray-900"
+                    : "text-gray-500 hover:text-black"
+                }`}
+              >
+                {item.name}
+              </Link>
+            ))}
           </div>
 
-          {/* Auth Buttons */}
+          {/* Auth */}
           <div className="flex items-center space-x-4">
             <SignedIn>
-              {/* Add Profile link back for signed-in users */}
-              <Link 
-                href="/profile" 
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/profile') 
-                    ? 'text-orange-500 bg-orange-50' 
-                    : 'text-gray-700 hover:text-orange-500'
+              <Link
+                href="/profile"
+                className={`text-sm font-medium transition-all px-2 py-1 rounded-md ${
+                  isActive("/profile")
+                    ? "text-black border-b-2 border-gray-900"
+                    : "text-gray-500 hover:text-black"
                 }`}
-                onClick={() => setMobileMenuOpen(false)}
               >
                 Profile
               </Link>
-              <UserButton 
+              <UserButton
                 afterSignOutUrl="/"
                 appearance={{
                   elements: {
@@ -105,77 +81,54 @@ export default function Navbar() {
             </SignedIn>
             <SignedOut>
               <SignInButton mode="modal">
-                <button className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium">
+                <button className="text-sm font-medium text-gray-800 border border-gray-300 rounded-md px-4 py-1.5 hover:border-gray-900 transition-all">
                   Sign In
                 </button>
               </SignInButton>
             </SignedOut>
           </div>
         </div>
-        {/* Mobile Menu Dropdown */}
+
+        {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-b border-gray-200 shadow-sm rounded-b-xl px-4 py-4 space-y-2 animate-fade-in">
-            <Link 
-              href="/movies" 
-              className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                isActive('/movies') 
-                  ? 'text-orange-500 bg-orange-50' 
-                  : 'text-gray-700 hover:text-orange-500'
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Movies
-            </Link>
-            <Link 
-              href="/games" 
-              className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                isActive('/games') 
-                  ? 'text-orange-500 bg-orange-50' 
-                  : 'text-gray-700 hover:text-orange-500'
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Games
-            </Link>
-            <Link 
-              href="/anime" 
-              className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                isActive('/anime') 
-                  ? 'text-orange-500 bg-orange-50' 
-                  : 'text-gray-700 hover:text-orange-500'
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Anime
-            </Link>
-            <Link 
-              href="/channels" 
-              className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                isActive('/channels') 
-                  ? 'text-orange-500 bg-orange-50' 
-                  : 'text-gray-700 hover:text-orange-500'
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Channels
-            </Link>
-            <SignedIn>
-              {/* Add Profile link to mobile menu */}
-              <Link 
-                href="/profile" 
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                  isActive('/profile') 
-                    ? 'text-orange-500 bg-orange-50' 
-                    : 'text-gray-700 hover:text-orange-500'
-                }`}
+          <div className="md:hidden bg-white/80 backdrop-blur-md border-t border-gray-200 py-4 space-y-3 animate-fade-in">
+            {[
+              { name: "🎥 Movies", href: "/movies" },
+              { name: "🎮 Games", href: "/games" },
+              { name: "🌀 Anime", href: "/anime" },
+              { name: "🎤 Channels", href: "/channels" },
+            ].map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
+                className={`block text-base font-medium px-3 py-2 rounded-md transition-all ${
+                  isActive(item.href)
+                    ? "text-black bg-gray-100"
+                    : "text-gray-600 hover:text-black hover:bg-gray-50"
+                }`}
+              >
+                {item.name}
+              </Link>
+            ))}
+
+            <SignedIn>
+              <Link
+                href="/profile"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block text-base font-medium px-3 py-2 rounded-md transition-all ${
+                  isActive("/profile")
+                    ? "text-black bg-gray-100"
+                    : "text-gray-600 hover:text-black hover:bg-gray-50"
+                }`}
               >
                 Profile
               </Link>
             </SignedIn>
+
             <SignedOut>
               <SignInButton mode="modal">
-                <button className="w-full px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium mt-2">
+                <button className="w-full text-base font-medium text-gray-800 border border-gray-300 rounded-md px-4 py-2 hover:border-gray-900 transition-all">
                   Sign In
                 </button>
               </SignInButton>
@@ -185,4 +138,4 @@ export default function Navbar() {
       </div>
     </nav>
   );
-} 
+}
