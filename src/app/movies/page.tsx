@@ -37,9 +37,14 @@ export default function MoviesPage() {
       : movies.filter((movie) =>
           (movie.genres || []).includes(selectedCategory)
         );
-  const searchedMovies = filteredMovies.filter((movie) =>
-    movie.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const searchedMovies = filteredMovies.filter((movie) => {
+    const searchLower = search.toLowerCase();
+    return (
+      movie.title.toLowerCase().includes(searchLower) ||
+      (movie.director && movie.director.toLowerCase().includes(searchLower)) ||
+      (Array.isArray(movie.cast) && movie.cast.some((c: string) => c.toLowerCase().includes(searchLower)))
+    );
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
